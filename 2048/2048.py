@@ -1,16 +1,16 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
+__author__ = 'finalsatan'
+
+
 """
-2048 game
-Version:    2014-11-19
-Author:     zyh
+A simple 2048 game
 """
 
 import random
 import sys
 import os
-
 
 
 class game2048(object):
@@ -25,11 +25,7 @@ class game2048(object):
 	#2048 初始化函数
 	def __init__(self, n):
 		self.n = n
-		for i in range(self.n):#初始化2048矩阵
-			self.nlist.append([])
-			for j in range(self.n):
-				#self.nlist[i][j] = 0
-				self.nlist[i].append(0)
+		self.nlist = list( list( 0 for i in range(n) ) for i in range(n) )
 
 		#########<随机两个位置为2或4>#############		
 		x_first = random.randint(0,self.n-1)
@@ -199,17 +195,18 @@ class game2048(object):
 		return l
 
 
-	def randomNum(self):
+	def randomNum(self, n=1):
 		#根据用户输入，图形进行相应的变化后，剩余为0的位置随机出现2或4
 		zero_list = []
-		random_ij = []
+	
 		for i in range(self.n):
 			for j in range(self.n):
-				if (self.nlist[i][j] == 0):
-					temp_ij = [i,j]
-					zero_list.append(temp_ij)
-		random_ij = random.choice(zero_list)
-		self.nlist[random_ij[0]][random_ij[1]] = random.choice(self.numlist)
+				if self.nlist[i][j] == 0:
+					zero_list.append([i,j])
+
+		random_ij = random.sample(zero_list, n)
+		for ij in random_ij:
+			self.nlist[ij[0]][ij[1]] = random.choice(self.numlist)
 
 
 	def isEnd(self):
@@ -231,30 +228,28 @@ class game2048(object):
 		self.nlist = originalMatrix
 
 
-	#2048 输出函数
+	
 	def outPut(self,matrix):
-		#print "self.nlist:",self.nlist
-		#os.system('cls')
-		n = len(matrix)
-		for i in range(n):
-			#for j in range(n):
-			#	print matrix[i][j],"\t"
-			#	pass
-			print matrix[i]
-		print "                                      "
+		'''
+		Output the 2048 matrix
+		'''
+		for single_list in matrix:
+			print(single_list)
+		print ("                                      ")
 
 
 if __name__=="__main__":
 
+    print("\nPlease input j,k,l,i to move.\nj:left\nl:right\ni:up\nk:down\n")
 
     game = game2048(4)
 
     while not game.isEnd():
         game.outPut(game.nlist)
-        m = raw_input("Please move:")
+        m = input("Please move:")
         game.nlistModify(m)
-    	if (game.move_flag):
-    		game.randomNum()
+        if (game.move_flag):
+            game.randomNum()
     
-    print "GameOver!!!"
+    print("GameOver!!!")
     
